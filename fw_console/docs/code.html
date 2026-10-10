@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>掌機程式導覽</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<style>
+:root{
+  --paper:#F0F2EE; --paper2:#E6EAE4; --raise:#FAFBF9;
+  --ink:#131B17; --ink2:#3A4A42; --mute:#6C7C73; --line:#CDD4CC;
+  --panel:#0A1210; --panel2:#142019; --panelline:#22332A;
+  --ch1:#E8B32A; --ch2:#2FD3D3; --copper:#B4530A; --ok:#2E7D53;
+  --serif:"Noto Serif TC",Georgia,"Songti TC",serif;
+  --sans:"Noto Sans TC",system-ui,-apple-system,"Microsoft JhengHei",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --paper:#0D1310; --paper2:#151D18; --raise:#131B16;
+  --ink:#E4EAE5; --ink2:#AFBCB4; --mute:#7F8F86; --line:#263029;
+  --panel:#060B09; --panel2:#101A14; --panelline:#1E2C24;
+  --copper:#E0863A; --ok:#4FBF85;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0D1310; --paper2:#151D18; --raise:#131B16;
+  --ink:#E4EAE5; --ink2:#AFBCB4; --mute:#7F8F86; --line:#263029;
+  --panel:#060B09; --panel2:#101A14; --panelline:#1E2C24;
+  --copper:#E0863A; --ok:#4FBF85;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.8;-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;line-height:1.35;
+  text-wrap:balance;margin:0}
+code,pre{font-family:var(--mono)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ch2);outline-offset:2px;border-radius:2px}
+
+#bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.barin{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;
+  align-items:center;gap:14px}
+.brand{font-family:var(--serif);font-weight:700;font-size:15px;white-space:nowrap}
+.brand b{color:var(--copper)}
+#nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+#nav::-webkit-scrollbar{display:none}
+#nav a,#nav button{font:inherit;font-size:13.5px;font-weight:500;color:var(--ink2);
+  background:none;border:0;padding:7px 12px;border-radius:7px;cursor:pointer;
+  white-space:nowrap;text-decoration:none}
+#nav a:hover,#nav button:hover{background:var(--paper2);color:var(--ink)}
+#nav .cur{background:var(--ink);color:var(--paper)}
+#themeBtn{font:inherit;font-size:12px;background:none;border:1px solid var(--line);
+  color:var(--mute);padding:5px 9px;border-radius:7px;cursor:pointer;white-space:nowrap}
+
+main{max-width:1180px;margin:0 auto;padding-block:32px 90px;padding-inline:16px}
+.col{max-width:68ch}
+.lede{font-size:17px;color:var(--ink2)}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--mute);margin-bottom:10px}
+p{margin:0 0 1em}
+h2{font-size:25px;margin:0 0 .5em}
+h3{font-size:18px;margin:2.4em 0 .7em}
+
+/* 流程圖 */
+.flow{display:grid;gap:9px;margin:1.4em 0}
+.fstep{display:grid;grid-template-columns:30px minmax(0,1fr);gap:13px;
+  background:var(--raise);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;align-items:start}
+.fstep .fn{width:26px;height:26px;border-radius:7px;background:var(--panel);
+  color:var(--ch1);font-family:var(--mono);font-size:12px;font-weight:600;
+  display:grid;place-items:center}
+.fstep code{font-size:13.5px;font-weight:600}
+.fstep p{margin:.2em 0 0;font-size:14px;color:var(--ink2);line-height:1.7}
+.fstep.dep{border-left:3px solid var(--copper)}
+
+.frame{background:var(--panel);color:#DCE5DF;border-radius:12px;padding:16px 18px;
+  margin:1.4em 0;font-family:var(--mono);font-size:12.5px;line-height:2;overflow-x:auto}
+.frame .n{color:var(--ch1)}
+.frame .c{color:#6E8378}
+.frame .h{color:var(--ch2)}
+
+/* 檔案瀏覽 */
+.browser{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);
+  gap:26px;margin-top:1.6em;align-items:start}
+@media (max-width:860px){.browser{grid-template-columns:1fr}}
+.tree{border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  background:var(--raise);position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px)}
+@media (max-width:860px){.tree{position:static}}
+.tree .grp{font-family:var(--mono);font-size:11px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--mute);padding:11px 14px 6px;
+  border-top:1px solid var(--line)}
+.tree .grp:first-child{border-top:0}
+.tree button{display:flex;justify-content:space-between;gap:8px;width:100%;
+  font:inherit;font-family:var(--mono);font-size:12.5px;text-align:left;
+  background:none;border:0;color:var(--ink2);padding:6px 14px;cursor:pointer}
+.tree button:hover{background:var(--paper2);color:var(--ink)}
+.tree button.cur{background:var(--ink);color:var(--paper)}
+.tree button span{color:var(--mute);font-size:11px;flex:none}
+.tree button.cur span{color:color-mix(in srgb,var(--paper) 65%,transparent)}
+#filter{font:inherit;font-family:var(--mono);font-size:12.5px;width:100%;
+  border:0;border-bottom:1px solid var(--line);background:var(--paper2);
+  color:var(--ink);padding:10px 14px}
+
+.fhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:.5em}
+.fhead h2{font-family:var(--mono);font-size:21px;margin:0}
+.badge{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:4px;
+  background:var(--paper2);border:1px solid var(--line);color:var(--ink2)}
+.badge.amber{background:color-mix(in srgb,var(--ch1) 20%,var(--paper));
+  border-color:color-mix(in srgb,var(--ch1) 40%,var(--paper))}
+.syms{display:flex;flex-wrap:wrap;gap:6px;margin:1em 0 1.4em}
+.sym{font-family:var(--mono);font-size:12px;padding:3px 8px;border-radius:5px;
+  background:var(--panel);color:#BCCBC2}
+.sym b{color:var(--ch2);font-weight:500}
+pre.ex{background:var(--panel);color:#DCE5DF;border-radius:10px;padding:0;
+  overflow-x:auto;font-size:12.5px;line-height:1.75;margin:.7em 0 1.5em}
+pre.ex .cap{display:block;background:var(--panel2);color:var(--ch2);
+  font-size:11px;letter-spacing:.06em;padding:8px 14px;
+  border-bottom:1px solid var(--panelline)}
+pre.ex .body{display:block;padding:13px 14px;white-space:pre}
+pre.ex .c{color:#6E8378}
+pre.ex .hl{background:rgba(232,179,42,.14);display:block;margin:0 -14px;padding:0 14px}
+.rel{display:flex;flex-wrap:wrap;gap:7px;margin:1.2em 0 0}
+.rel a{font-size:13px;padding:5px 11px;border-radius:20px;border:1px solid var(--line);
+  background:var(--raise);text-decoration:none;color:var(--ink)}
+.rel a:hover{border-color:var(--ch2)}
+.note{background:var(--paper2);border-radius:10px;padding:13px 15px;font-size:14.5px;
+  color:var(--ink2);margin:1.2em 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="bar">
+  <div class="barin">
+    <span class="brand">程式<b>導覽</b></span>
+    <nav id="nav" aria-label="主導覽">
+      <a href="learn.html#map">學習地圖</a>
+      <button class="cur" type="button">程式導覽</button>
+      <a href="learn.html#pins">腳位圖</a>
+      <a href="learn.html#glossary">詞彙表</a>
+      <a href="learn.html#progress">我的進度</a>
+    </nav>
+    <button id="themeBtn" type="button">深色</button>
+  </div>
+</div>
+
+<main>
+  <div class="col">
+    <div class="eyebrow">程式架構導覽台</div>
+    <h2>這台機器由哪些檔案組成</h2>
+    <p class="lede">教學在<a href="learn.html#map" style="text-decoration-color:var(--ch2)">學習地圖</a>那邊，這裡是查閱用的。
+    每個檔案寫了它負責什麼、關鍵符號在哪一行、以及對應哪幾站。</p>
+  </div>
+
+  <h3>開機順序</h3>
+  <p class="col" style="color:var(--ink2);font-size:15px">順序不能換。橘色左邊框的那幾步有前後依賴，換了就壞。</p>
+  <div class="flow" id="bootFlow"></div>
+
+  <h3>一幀裡發生什麼</h3>
+  <p class="col" style="color:var(--ink2);font-size:15px">三款遊戲的主迴圈都是這個形狀，只有 <code>TICK_MS</code> 和中間的內容不同。</p>
+  <div class="frame">
+<span class="n">t0</span> = msTick;                        <span class="c">/* 記住這一幀的起點 */</span>
+
+  <span class="h">Input_Poll()</span>        <span class="c">讀 4 顆按鍵 + 4 軸 ADC，兩次取樣去彈跳</span>
+  <span class="h">Sound_Update()</span>      <span class="c">音符時間到了就換下一個</span>
+  <span class="h">Input_Pressed()</span>     <span class="c">取出這一幀的「剛按下」，讀完即清</span>
+       ↓
+  <span class="h">遊戲動作</span>            <span class="c">fire() / dino_step() / apply_move()</span>
+  <span class="h">move_collector()</span>    <span class="c">Input_JoyAxis() 的類比值 → 位置</span>
+  <span class="h">step_world()</span>        <span class="c">推進物理、判定碰撞</span>
+  <span class="h">render()</span>            <span class="c">只重畫變動的區塊，組好再送出</span>
+       ↓
+<span class="c">while (msTick - </span><span class="n">t0</span><span class="c"> &lt; TICK_MS) { }        把剩下的時間補滿</span>
+
+<span class="c">Dino 20 ms（50 fps）　Gate Keeper 25 ms（40 fps）　2048 與選單 10 ms</span></div>
+
+  <h3>檔案</h3>
+  <div class="browser">
+    <div class="tree">
+      <input id="filter" type="text" placeholder="篩選檔名或關鍵字…" autocomplete="off">
+      <div id="treeList"></div>
+    </div>
+    <div id="detail"></div>
+  </div>
+</main>
+
+<script>
+const el = (t,c,h) => { const n = document.createElement(t);
+  if (c) n.className = c; if (h != null) n.innerHTML = h; return n; };
+
+const BOOT = [
+ ["stm32f4_Hardware_Init()","User_common/HardwareSystem_Ini.c",
+  "設 PLL 把系統拉到 168 MHz、啟動 SysTick、算出 SYS/HCLK/PCLK1/PCLK2 四個頻率存成全域變數。後面每一步都靠它。", 1],
+ ["LCD_Init()","GLCD/stm324xg_lcd_ILI9341_Pro.c",
+  "設定 FSMC、把 LCD 用到的腳位設成 AF12、送出 ILI9341 的初始化序列、開背光。", 0],
+ ["LCD_DisplayOn()","GLCD/stm324xg_lcd_ILI9341_Pro.c", "打開顯示輸出。", 0],
+ ["Default_Calibration()","SPI_touch/touch_module.c",
+  "載入觸控座標的轉換係數。<b>必須排在 LCD_Init() 之後</b>，因為計算要用到 LCD_Pixel_Width()。", 1],
+ ["Driver_GPIO()","SPI_touch/Driver_SPI.c",
+  "設定觸控的四支 SPI 腳與中斷腳，順便把板載 KEY1（PB8）設成輸入上拉。", 0],
+ ["Input_Init()","App/input.c",
+  "開 GPIOB/C/E 時脈、四顆按鍵設輸入上拉、四軸設類比、設定 ADC1，最後量搖桿中心。<b>這一刻不要碰搖桿</b>。", 1],
+ ["Sound_Init()","App/sound.c",
+  "PA6 設成 AF2、開 TIM3 時脈、設成 PWM 模式。<b>需要第一步算出的 PCLK1_Freq</b>，所以不能提前。", 1],
+ ["splash()","App/app_main.c",
+  "開機畫面停 4.5 秒，期間持續顯示四軸的即時 ADC 讀數，接線壞了在進選單前就看得出來。", 0],
+ ["for(;;) { Menu_Run(); … }","App/app_main.c",
+  "狀態機。選單阻塞直到玩家挑了遊戲，遊戲自己跑主迴圈，按 KEY1 就 return 回到這裡。", 0]
+];
+
+const FILES = [
+{f:"App/app_main.c", n:123, g:"App", w:"開機順序與狀態機",
+ d:"整台機器的入口。上半是 splash()，下半是 main()：七個初始化呼叫加一個永不結束的 switch。",
+ syms:[["main()","94"],["splash()","35"],["SPLASH_MS","33"]],
+ ex:[["App/app_main.c:110–122　狀態機",
+`for (;;) {
+    screen = Menu_Run();               /* 阻塞，直到玩家選了 */
+
+    switch (screen) {
+    case APP_DINO:   Dino_Run();     break;
+    case APP_2048:   Game2048_Run(); break;
+    case APP_GATE:   Gate_Run();     break;
+    case APP_IOTEST: IoTest_Run();   break;
+    }
+
+    Sound_Stop();                      /* 離開遊戲一定關聲音 */
+}`]],
+ rel:[1,11]},
+
+{f:"App/console.h", n:53, g:"App", w:"共用常數與 UI 宣告",
+ d:"螢幕尺寸、AppScreen 列舉、四個 UI 輔助函式的宣告。每個遊戲檔案都 include 它。",
+ syms:[["SCR_W / SCR_H","19"],["AppScreen","23"],["App_Wait()","46"]],
+ ex:[["App/console.h:23–29　畫面列舉",
+`typedef enum {
+    APP_MENU = 0,
+    APP_DINO,
+    APP_2048,
+    APP_GATE,
+    APP_IOTEST
+} AppScreen;`]],
+ rel:[11]},
+
+{f:"App/input.c", n:315, g:"App", w:"按鍵與搖桿，全部暫存器級",
+ d:"這個專案最值得讀的檔案。腳位定義、GPIO 設定、ADC 設定、去彈跳、邊緣偵測、遲滯、類比映射、接線診斷都在裡面。",
+ syms:[["PIN_BTN_UP…","14"],["JOY_ON / JOY_OFF","39"],["Input_AdcRaw()","61"],
+       ["gpio_input_pullup()","91"],["Input_Init()","89"],["axis_bits()","187"],
+       ["Input_Poll()","206"],["Input_JoyAxis()","253"],["Input_ScanLow()","308"]],
+ ex:[["App/input.c:91–96　設定一支上拉輸入腳",
+`static void gpio_input_pullup(GPIO_TypeDef *port, uint8_t pin)
+{
+<span class="hl">    port-&gt;MODER &amp;= ~(3UL &lt;&lt; (pin * 2));                  /* 00 = 輸入   */</span>
+<span class="hl">    port-&gt;PUPDR  = (port-&gt;PUPDR &amp; ~(3UL &lt;&lt; (pin * 2)))</span>
+<span class="hl">                 | (1UL &lt;&lt; (pin * 2));                   /* 01 = 上拉   */</span>
+}`],
+     ["App/input.c:238–243　去彈跳與邊緣偵測，一共五行",
+`agree     = (uint16_t)~(raw ^ s_lastRaw);   /* 兩次取樣一致的位元       */
+s_held    = (uint16_t)((s_held &amp; ~agree) | (raw &amp; agree));
+s_lastRaw = raw;
+
+s_edge |= (uint16_t)(s_held &amp; ~s_prev);     /* 這次有、上次沒有 = 剛按下 */
+s_prev  = s_held;`],
+     ["App/input.c:192–200　遲滯：已經推著的軸用比較寬鬆的門檻",
+`if ((was &amp; posBit) &amp;&amp; d &gt;  JOY_OFF) out |= posBit;
+else if (d &gt;  JOY_ON)               out |= posBit;
+
+if ((was &amp; negBit) &amp;&amp; d &lt; -JOY_OFF) out |= negBit;
+else if (d &lt; -JOY_ON)               out |= negBit;`]],
+ rel:[2,3,5,7]},
+
+{f:"App/input.h", n:105, g:"App", w:"按鍵位元遮罩與腳位表",
+ d:"BTN_* 和 J1_*／J2_* 的位元定義，以及整份腳位對照表的註解——PINMAP.md 之外第二個查腳位的地方。",
+ syms:[["BTN_UP…BTN_BACK","31"],["J1_UP…J2_RIGHT","39"],["ANY_UP / ANY_DOWN","48"]],
+ ex:[["App/input.h:31–46　把按鍵和搖桿方向放進同一個 16 位元遮罩",
+`#define BTN_UP        0x0001u
+#define BTN_DOWN      0x0002u
+...
+#define J1_UP         0x0100u
+#define J1_DOWN       0x0200u
+...
+/* 於是遊戲可以寫 if (pressed &amp; ANY_UP)，按鍵和搖桿一視同仁 */
+#define ANY_UP        (BTN_UP    | J1_UP    | J2_UP)`]],
+ rel:[5,7]},
+
+{f:"App/sound.c", n:202, g:"App", w:"TIM3 PWM 發聲與旋律佇列",
+ d:"把頻率換成 PSC 與 ARR、把 PA6 交給 TIM3、以及一個非阻塞的音符佇列。也有給有源蜂鳴器用的純 DC 模式。",
+ syms:[["PIN_SPK / AF_TIM3","8"],["timer_clock()","28"],["Sound_Init()","35"],
+       ["tone_on()","72"],["Sound_DC()","96"],["Sound_Update()","129"],["Sound_Debug()","155"]],
+ ex:[["App/sound.c:74–93　從頻率反算兩個暫存器",
+`total = s_timClk / freq;
+if (total == 0) { Sound_Stop(); return; }
+
+<span class="hl">psc = (total + 65535UL) / 65536UL;     /* 最小的 PSC+1 使 ARR 放得下 */</span>
+if (psc == 0) psc = 1;
+arr = total / psc;
+
+TIM3-&gt;PSC  = (uint16_t)(psc - 1);
+TIM3-&gt;ARR  = (uint16_t)(arr - 1);
+TIM3-&gt;CCR1 = (uint16_t)(arr / 2);      /* 50% 工作週期 = 方波 */
+TIM3-&gt;EGR  = 1UL;                      /* UG：讓新值立刻生效  */
+TIM3-&gt;CCER |= (1UL &lt;&lt; 0);              /* CC1E：開始驅動腳位  */
+TIM3-&gt;CR1  |= (1UL &lt;&lt; 0);              /* CEN：跑             */`],
+     ["App/sound.c:28–32　APB1 計時器的 ×2 規則",
+`static uint32_t timer_clock(void)
+{
+    uint32_t ppre1 = (RCC-&gt;CFGR &gt;&gt; 10) &amp; 0x7;   /* bits 12:10 */
+<span class="hl">    return (ppre1 &lt; 4) ? PCLK1_Freq : (PCLK1_Freq * 2);</span>
+}`]],
+ rel:[3,4,8]},
+
+{f:"App/sound.h", n:88, g:"App", w:"音高常數與 Note 結構",
+ d:"NOTE_C4 到 NOTE_G6 的頻率、Note 結構、八個現成音效，以及有源／無源蜂鳴器的差別說明。",
+ syms:[["NOTE_C4…NOTE_G6","23"],["Note","38"],["Sound_DC()","68"],["SFX_Jump()…","79"]],
+ ex:[["App/sound.h:38–41　旋律就是一個陣列",
+`typedef struct {
+    uint16_t freq;   /* Hz，或 NOTE_REST 代表休止 */
+    uint16_t ms;     /* 長度                      */
+} Note;`]],
+ rel:[8]},
+
+{f:"App/gfx.c", n:87, g:"App", w:"組圖再送出的繪圖器",
+ d:"整份程式防閃爍的核心，只有 87 行。在 RAM 裡把一塊區域組好（背景、線、sprite），再一次寫到面板。",
+ syms:[["s_buf[]","7"],["Gfx_BandBegin()","10"],["Gfx_BandRect()","24"],
+       ["Gfx_BandSprite()","44"],["Gfx_BandEnd()","69"]],
+ ex:[["App/gfx.c:51–64　1bpp sprite 的取位元",
+`stride = (uint16_t)((s-&gt;w + 7) / 8);        /* 一列佔幾個位元組 */
+...
+<span class="hl">if (row[sx &gt;&gt; 3] &amp; (0x80u &gt;&gt; (sx &amp; 7)))    /* 第 sx 個位元 */</span>
+    s_buf[(uint32_t)dy * s_w + dx] = ink;`],
+     ["App/gfx.c:10–16　超過緩衝區就拒絕，而不是寫壞記憶體",
+`void Gfx_BandBegin(uint16_t w, uint16_t h, uint16_t bg)
+{
+    if ((uint32_t)w * h &gt; GFX_BUF_PIX) {   /* 拒絕，而不是蓋掉別的 RAM */
+        s_w = s_h = 0;
+        return;
+    }`]],
+ rel:[9,11]},
+
+{f:"App/gfx.h", n:43, g:"App", w:"為什麼要組圖再送出",
+ d:"檔頭的註解把閃爍的成因和解法講完了，是整個專案最值得先讀的一段註解。",
+ syms:[["Sprite 結構","dino_sprites.h"],["GFX_BUF_PIX","31"]],
+ ex:[["App/gfx.h:31　RAM 裡最大的單一配置",
+`/* 一次能組多大的矩形，單位是像素。
+ * 最大的使用者是恐龍那一條：44 × 100。 */
+#define GFX_BUF_PIX  4800        /* = 9600 bytes */`]],
+ rel:[9,11,12]},
+
+{f:"App/game_dino.c", n:651, g:"App", w:"Dino：教學關 + 跑酷",
+ d:"五步教學關（按鍵、搖桿各兩步，最後跳一次仙人掌）、定點數跳躍物理、障礙物生成與碰撞、遊戲結束畫面。",
+ syms:[["GRAVITY16 / JUMP_V16","57"],["TICK_MS","63"],["OBST[]","72"],
+       ["dino_step()","272"],["draw_obst()","200"],["dino_tutorial()","390"],["dino_play()","515"]],
+ ex:[["App/game_dino.c:57–63　全部用整數的物理常數",
+`#define GRAVITY16      5        /* 每幀加 5/16 像素的速度  */
+#define JUMP_V16    (-102)      /* 起跳 −102/16 像素/幀    */
+
+#define SPEED_MIN16   48        /* 3.0 像素/幀             */
+#define SPEED_MAX16  128        /* 8.0 像素/幀             */
+
+#define TICK_MS       20`],
+     ["App/game_dino.c　障礙物的區塊多出 step 像素當橡皮擦",
+`int16_t bw = (int16_t)(s-&gt;w + step);   /* 多出 step 像素填背景色 */
+...
+Gfx_BandBegin((uint16_t)bw, s-&gt;h, SKY);
+Gfx_BandSprite(s, sx, 0, INK);
+Gfx_BandEnd(bx, OBST[o-&gt;kind].top);`]],
+ rel:[6,11,12]},
+
+{f:"App/game_2048.c", n:623, g:"App", w:"2048：滑動教學 + 盤面邏輯",
+ d:"移動合併演算法沿用課程原專案，另外修掉了上排文字重疊的版面問題，並加上五步滑動教學。",
+ syms:[["TILE_BG_COLOR[]","57"],["Move_Left()…","121"],["Draw_Tile()","237"],
+       ["swipe_dir()","394"],["poll_touch()","420"],["tutorial_2048()","500"]],
+ ex:[["App/game_2048.c:394–403　主軸決定滑動方向",
+`static SwipeDir swipe_dir(int16_t dx, int16_t dy)
+{
+    int16_t adx = dx &lt; 0 ? (int16_t)-dx : dx;
+    int16_t ady = dy &lt; 0 ? (int16_t)-dy : dy;
+
+<span class="hl">    if (adx &lt; SWIPE_MIN &amp;&amp; ady &lt; SWIPE_MIN) return SW_NONE;   /* 太短 */</span>
+    if (adx &gt;= ady) return (dx &gt; 0) ? SW_RIGHT : SW_LEFT;
+    return (dy &gt; 0) ? SW_DOWN : SW_UP;
+}`],
+     ["App/game_2048.c:36–45　修好的上排版面，每個欄位有固定不重疊的位置",
+`/* x:    6..61       96..151      196..252    258..314
+ *     [ SCORE  ]  [  BEST   ]   [  NEW   ]  [  MENU  ]  */
+#define SCORE_X       6
+#define BEST_X       96
+#define BTN_NEW_X   196
+#define BTN_MENU_X  258`]],
+ rel:[10,11]},
+
+{f:"App/game_gate.c", n:812, g:"App", w:"Gate Keeper：四條車道 + 類比收集器",
+ d:"最新也最大的遊戲。四顆按鍵各守一條車道，搖桿控制收集器。示範了「等時間而不是等像素」這種讓遊戲公平的設計。",
+ syms:[["LANE_V / LANE_H","60"],["LB[] 車道幾何","74"],["lane_scale()","84"],
+       ["COOLDOWN_MS","110"],["draw_lane()","190"],["render()","430"],["gate_play()","640"]],
+ ex:[["App/game_gate.c:84–87　把速度按車道長度縮放",
+`static int16_t lane_scale(uint8_t l, int16_t v)
+{
+<span class="hl">    return (l &lt; LN_LEFT) ? (int16_t)((int32_t)v * LANE_V / LANE_H) : v;</span>
+}
+/* 螢幕是 320×240，左右車道 148 像素、上下只有 92。
+ * 同樣的像素速度會讓短車道難得多，所以按長度縮放，
+ * 讓每個敵人走進來的「時間」相同。 */`],
+     ["App/game_gate.c　render() 的順序決定誰蓋住誰",
+`if (s_ocx != s_cx || s_ocy != s_cy)
+    wipe(舊位置);                      /* 先擦，讓下面的重畫補回來 */
+
+for (i = 0; i &lt; LN_N; i++) draw_lane(i);
+draw_core();
+for (i = 0; i &lt; MAX_PU; i++) if (s_pu[i].active) draw_pickup(&amp;s_pu[i]);
+draw_collector();                      /* 最後畫，所以在最上層 */
+hud_update();`]],
+ rel:[7,11]},
+
+{f:"App/iotest.c", n:389, g:"App", w:"接線診斷畫面",
+ d:"不是遊戲，是工具。四軸長條圖、按鍵即時狀態、觸控座標、ADC 錯誤計數、蜂鳴器掃頻，還有一個會逐腳測試的 FIND。實際幫這台機器抓到了兩次接線錯誤。",
+ syms:[["draw_axis()","112"],["draw_scan()","150"],["draw_sound()","180"],
+       ["pin_warble()","243"],["find_pin()","255"],["SWEEP_MS","30"]],
+ ex:[["App/iotest.c　直接翻腳位，不經過 TIM3，所以任何腳都能測",
+`static void pin_warble(uint8_t pin, uint32_t ms)
+{
+    uint32_t t0 = msTick;
+    while (msTick - t0 &lt; ms) {
+        volatile uint32_t d;
+        GPIOA-&gt;BSRR = (1UL &lt;&lt; pin);
+        for (d = 4000; d; d--) { }
+        GPIOA-&gt;BSRR = (1UL &lt;&lt; (pin + 16));
+        for (d = 4000; d; d--) { }
+    }
+}`]],
+ rel:[4,5,7,8]},
+
+{f:"App/menu.c", n:130, g:"App", w:"首頁選單",
+ d:"四個項目，觸控和按鍵兩條路都能選。刻意保留按鍵操作，因為觸控校正跑掉是最常見的現場故障。",
+ syms:[["ITEM_NAME[]","29"],["draw_item()","38"],["Menu_Run()","77"]],
+ ex:[["App/menu.c:29–34　四個項目",
+`static const char *ITEM_NAME[ITEM_N] = { "DINO RUN", "2048", "GATE KEEPER", "I/O TEST" };
+static const char *ITEM_SUB [ITEM_N] = { "jump the cactus",
+                                         "slide and merge",
+                                         "hold the four lanes",
+                                         "check your wiring" };`]],
+ rel:[11]},
+
+{f:"App/ui.c", n:58, g:"App", w:"共用的畫面元件",
+ d:"按鈕、置中文字、頂端提示條，以及 App_Wait()——一個會讓音效引擎繼續走的等待。",
+ syms:[["App_Wait()","6"],["UI_TextCentred()","12"],["UI_Button()","26"],["UI_Banner()","48"]],
+ ex:[["App/ui.c:6–10　會讓音樂繼續播的等待",
+`void App_Wait(uint32_t ms)
+{
+    uint32_t until = msTick + ms;
+<span class="hl">    while ((int32_t)(msTick - until) &lt; 0) Sound_Update();</span>
+}`]],
+ rel:[6]},
+
+{f:"App/dino_sprites.h", n:541, g:"App", w:"16 個 sprite，2050 位元組",
+ d:"由 tools/gen_sprites.py 從真的 Chrome-Dino-Runner PNG 產生的 1bpp 點陣資料。不要手改，改產生器。",
+ syms:[["Sprite 結構","22"],["SPR_DINO_RUN1","-"],["SPR_GAMEOVER","-"]],
+ ex:[["App/dino_sprites.h:22–26　sprite 的描述",
+`typedef struct {
+    uint8_t        w;      /* 寬，像素                       */
+    uint8_t        h;      /* 高，像素                       */
+    const uint8_t *bits;   /* 每列 (w+7)/8 位元組，共 h 列   */
+} Sprite;`]],
+ rel:[9,12]},
+
+{f:"GLCD/stm324xg_lcd_ILI9341_Pro.c", n:3739, g:"GLCD", w:"ILI9341 + FSMC 驅動",
+ d:"課程提供的驅動，本專案只改過一行字型選擇。前 40 行是設定區，值得讀；剩下是繪圖函式，當黑盒用。",
+ syms:[["RS_bit / LCD_BASE","5"],["__Fonts_select","13"],["FSMC 腳位位元圖","25"],
+       ["LCD_FillRect()","-"],["LCD_DrawRGBImage()","2341"]],
+ ex:[["GLCD/stm324xg_lcd_ILI9341_Pro.c:5–7　為什麼 LCD 有一個位址",
+`#define  RS_bit              6
+#define  LCD_BASE_sel        0x6C000000
+<span class="hl">#define  LCD_BASE            (LCD_BASE_sel | ((0x01UL &lt;&lt; (RS_bit+1)) - 2))</span>
+                             /* → 0x6C00007E */`],
+     ["GLCD/stm324xg_lcd_ILI9341_Pro.c:25–33　螢幕佔用的腳位，一支都不能碰",
+`#define PNr_FSMC_set1 3          /* GPIOD */
+#define PinBit_FSMC_set1 0xC733  /* → PD0,1,4,5,8,9,10,14,15 */
+#define PNr_FSMC_set2 4          /* GPIOE */
+#define PinBit_FSMC_set2 0xFF80  /* → PE7..PE15 */
+#define PNr_FSMC_set3 6          /* GPIOG */
+#define PinBit_FSMC_set3 0x1000  /* → PG12  NE4 */
+#define PNr_FSMC_set4 5          /* GPIOF */
+#define PinBit_FSMC_set4 0x1000  /* → PF12  A6 = RS */`],
+     ["GLCD/stm324xg_lcd_ILI9341_Pro.c:13–14　本專案唯一改過的地方，換來 10.6 KB",
+`<span class="hl">#define __Fonts_select   0x00000006   /* 只留 Font12 與 Font16 */</span>
+<span class="hl">#define __default_Font   2            /* 預設改成 Font16       */</span>`]],
+ rel:[9,12]},
+
+{f:"GLCD/stm324xg_lcd_sklin.h", n:421, g:"GLCD", w:"繪圖 API 與顏色常數",
+ d:"要查「有沒有現成的函式可以畫這個」就翻這裡。也是 RGB565 顏色常數的來源。",
+ syms:[["LCD_FillRect()","298"],["LCD_DrawRGBImage()","297"],["LCD_SetColors()","258"],
+       ["WHITE / GREEN / …","334"]],
+ ex:[["GLCD/stm324xg_lcd_sklin.h:334–355　RGB565 的顏色常數",
+`#define BLUE          0x001F     /* 紅 5 位、綠 6 位、藍 5 位 */
+#define GREEN         0x07E0
+#define RED           0xF800
+#define WHITE         0xFFFF
+#define DARKGRAY      0x4208`]],
+ rel:[9]},
+
+{f:"GLCD/stm32f4xx_fsmc.c", n:1004, g:"GLCD", w:"FSMC 設定函式",
+ d:"標準外設庫的 FSMC 部分，被 LCD 驅動呼叫。設定時序參數和 Bank 的地方。一般不需要改。",
+ syms:[["FSMC_NORSRAM_Init()","-"],["FSMC_NORSRAM_Timing_Init()","-"]],
+ ex:[], rel:[9]},
+
+{f:"SPI_touch/Driver_SPI.c", n:262, g:"SPI_touch", w:"軟體 SPI 與腳位",
+ d:"用普通 GPIO 自己翻時脈實作 SPI，因為那四支腳不在同一組硬體 SPI 上。PB0 被它佔用，這是蜂鳴器改到 PA6 的原因。",
+ syms:[["GPIO_SCK / CS / MI / MO","19"],["Driver_GPIO()","26"]],
+ ex:[["SPI_touch/Driver_SPI.c:19–22　四條線各自在哪",
+`#define GPIO_SCK   GPIOB     /* PB0  —— 蜂鳴器本來想用這支，撞了  */
+#define GPIO_CS    GPIOC     /* PC13 */
+#define GPIO_MI    GPIOB     /* PB2   MISO */
+#define GPIO_MO    GPIOF     /* PF11  MOSI */`]],
+ rel:[10]},
+
+{f:"SPI_touch/touch_module.c", n:329, g:"SPI_touch", w:"觸控座標與校正",
+ d:"讀觸控晶片、把兩個 ADC 讀數換成像素座標、以及 TS_GetState() 這個所有觸控畫面都在用的介面。",
+ syms:[["TSC_TouchDet()","118"],["TS_GetState()","146"],
+       ["WaitForTouchRelease()","247"],["Cal_GetXY()","279"],["Default_Calibration()","306"]],
+ ex:[["SPI_touch/touch_module.h　觸控狀態結構",
+`typedef struct
+{
+  uint16_t TouchDetected;
+  uint16_t x;
+  uint16_t y;
+} TS_StateTypeDef;`]],
+ rel:[10]},
+
+{f:"User_common/HardwareSystem_Ini.c", n:910, g:"User_common", w:"時脈樹、SysTick、USART",
+ d:"開機第一步。設 PLL、算出四個匯流排頻率、啟動 SysTick、設定中斷優先權位元。用 Keil 的設定精靈改比手改安全。",
+ syms:[["SYS_Freq…PCLK2_Freq","9"],["my_getPCLKx_Freq()","560"],
+       ["stm32_SysTickSetup()","584"],["stm32f4_Hardware_Init()","-"]],
+ ex:[["User_common/HardwareSystem_Ini.c:878–883　四個頻率是在這裡算出來的",
+`SYS_Freq   = HAL_RCC_GetSysClockFreq();
+HCLK_Freq  = my_getHCLKFreq();
+reg_value  = (RCC-&gt;CFGR &amp; RCC_CFGR_PPRE1) &gt;&gt; 10;
+<span class="hl">PCLK1_Freq = my_getPCLKx_Freq(reg_value);    /* sound.c 要用這個 */</span>
+reg_value  = (RCC-&gt;CFGR &amp; RCC_CFGR_PPRE2) &gt;&gt; 13;
+PCLK2_Freq = my_getPCLKx_Freq(reg_value);`]],
+ rel:[3,6]},
+
+{f:"User_common/user_defined.c", n:341, g:"User_common", w:"SysTick 處理、delay、Flash",
+ d:"msTick 就住在這裡。也有 delay_ms()、EXTI 去彈跳的骨架，以及寫內部 Flash 的函式——存最高分要用的東西已經準備好了。",
+ syms:[["msTick","18"],["SysTick_Handler()","19"],["delay_ms()","26"],
+       ["User_FLASH_SectorErase()","72"],["User_FLASH_beforeWRITE()","110"]],
+ ex:[["User_common/user_defined.c:18–30　整份程式所有計時的來源",
+`volatile uint32_t msTick;
+
+void SysTick_Handler(void)
+{
+<span class="hl">    msTick++;</span>
+    ...
+}
+
+void delay_ms(uint32_t wait_ms)
+{
+    uint32_t Time_last = msTick;
+    while ((msTick - Time_last) &lt; wait_ms);   /* 阻塞，別放進遊戲迴圈 */
+}`]],
+ rel:[6]},
+
+{f:"tools/gen_sprites.py", n:90, g:"tools", w:"PNG → 1bpp C 陣列",
+ d:"在電腦上跑，不是韌體。把 Chrome-Dino-Runner 的 PNG 縮到目標高度、轉成 1 位元遮罩、印成 dino_sprites.h。改 JOBS 表就能調整所有 sprite 的大小。",
+ syms:[["JOBS 表","19"],["convert()","38"]],
+ ex:[["tools/gen_sprites.py:19–24　想換 sprite 大小就改這裡",
+`JOBS = [
+    ("dino_run1",  r"Dino\\DinoRun1.png",        34),
+    ("dino_run2",  r"Dino\\DinoRun2.png",        34),
+    ("dino_jump",  r"Dino\\DinoJump.png",        34),
+    ...
+]   # (C 變數名, 相對路徑, 目標高度)　寬度自動等比`]],
+ rel:[9,12]},
+
+{f:"PINMAP.md", n:158, g:"文件", w:"腳位、安全上限、上電檢查表",
+ d:"接線的事實基準。第 1 節列出被佔用的腳並附上出處行號，第 3 節是保護硬體的兩條規則，第 5 節是分階段上電的順序。",
+ syms:[["§1 已被佔用的腳","-"],["§3 硬體安全規則","-"],["§5 分階段上電","-"]],
+ ex:[], rel:[3,10]},
+
+{f:"README.md", n:150, g:"文件", w:"玩法、建置結果、已知限制",
+ d:"包含目前的連結器數字、為什麼砍掉 Font20 和 Font24、以及哪些事是刻意沒做的（EXTI、Flash 存檔、第二支搖桿）。",
+ syms:[["建置大小","-"],["已知限制","-"]],
+ ex:[], rel:[12]}
+];
+
+/* ---------- 開機順序 ---------- */
+const bf = document.getElementById("bootFlow");
+BOOT.forEach((b, i) => {
+  const s = el("div","fstep" + (b[3] ? " dep" : ""));
+  s.innerHTML = `<div class="fn">${i+1}</div>
+    <div><code>${b[0]}</code>
+    <p><span style="font-family:var(--mono);font-size:12px;color:var(--mute)">${b[1]}</span><br>${b[2]}</p></div>`;
+  bf.appendChild(s);
+});
+
+/* ---------- 檔案瀏覽 ---------- */
+const treeList = document.getElementById("treeList");
+const detail = document.getElementById("detail");
+let cur = 0;
+
+function slug(f){ return f.replace(/\W/g,""); }
+
+function showFile(i){
+  cur = i;
+  const d = FILES[i];
+  treeList.querySelectorAll("button").forEach(b =>
+    b.classList.toggle("cur", +b.dataset.i === i));
+  detail.innerHTML = `
+    <div class="fhead">
+      <h2>${d.f.split("/").pop()}</h2>
+      <span class="badge">${d.g}</span>
+      <span class="badge amber">${d.n} 行</span>
+    </div>
+    <p class="lede" style="margin:0 0 .6em"><strong>${d.w}</strong></p>
+    <p style="color:var(--ink2)">${d.d}</p>
+    <div class="syms">${d.syms.map(s =>
+      `<span class="sym"><b>${s[0]}</b>${s[1] !== "-" ? " :" + s[1] : ""}</span>`).join("")}</div>
+    ${d.ex.map(e => `<pre class="ex"><span class="cap">${e[0]}</span><span class="body">${e[1]}</span></pre>`).join("")}
+    ${d.ex.length === 0 ? '<div class="note">這個檔案沒有摘錄。它是課程或標準庫提供的，當黑盒使用就好。</div>' : ""}
+    ${d.rel.length ? `<div class="rel"><span style="font-size:13px;color:var(--mute);align-self:center">相關站點：</span>` +
+      d.rel.map(n => `<a href="learn.html#s${n}">第 ${n} 站</a>`).join("") + `</div>` : ""}
+    <p style="margin-top:2em;font-family:var(--mono);font-size:12px;color:var(--mute)">
+      完整檔案在專案裡：<code>fw_console/${d.f}</code></p>`;
+  try { history.replaceState(null,"","#"+slug(d.f)); } catch(e){}
+}
+
+function buildTree(q){
+  treeList.innerHTML = "";
+  const groups = [];
+  FILES.forEach((d, i) => {
+    const hay = (d.f + " " + d.w + " " + d.d + " " + d.syms.map(s=>s[0]).join(" ")).toLowerCase();
+    if (q && !hay.includes(q.toLowerCase())) return;
+    let g = groups.find(x => x.g === d.g);
+    if (!g){ g = {g:d.g, items:[]}; groups.push(g); }
+    g.items.push([d, i]);
+  });
+  if (!groups.length){
+    treeList.appendChild(el("div","grp","沒有符合的檔案"));
+    return;
+  }
+  groups.forEach(g => {
+    treeList.appendChild(el("div","grp", g.g + "/"));
+    g.items.forEach(([d, i]) => {
+      const b = el("button", i === cur ? "cur" : "");
+      b.dataset.i = i;
+      b.innerHTML = `<span style="color:inherit;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${d.f.split("/").pop()}</span><span>${d.n}</span>`;
+      b.onclick = () => showFile(i);
+      treeList.appendChild(b);
+    });
+  });
+}
+document.getElementById("filter").oninput = e => buildTree(e.target.value.trim());
+
+/* ---------- 主題 ---------- */
+const tBtn = document.getElementById("themeBtn");
+function themeLabel(){
+  tBtn.textContent = document.documentElement.getAttribute("data-theme") === "dark" ? "淺色" : "深色";
+}
+tBtn.onclick = () => {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+  try { localStorage.setItem("fwconsole.theme", dark ? "light" : "dark"); } catch(e){}
+  themeLabel();
+};
+try {
+  const th = localStorage.getItem("fwconsole.theme");
+  if (th) document.documentElement.setAttribute("data-theme", th);
+} catch(e){}
+themeLabel();
+
+/* ---------- 啟動 ---------- */
+(function(){
+  const tok = (location.hash || "").slice(1);
+  let i = FILES.findIndex(d => slug(d.f) === tok);
+  if (i < 0) i = FILES.findIndex(d => slug(d.f).toLowerCase().includes(tok.toLowerCase()) && tok);
+  cur = i >= 0 ? i : 0;
+  buildTree("");
+  showFile(cur);
+})();
+</script>
+</body>
+</html>

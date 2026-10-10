@@ -1,0 +1,22 @@
+** Drc report for stm32_console_carrier.kicad_pcb **
+** Created on 2026-10-10T12:55:50 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 1 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; 1 spokes connected to isolated island)
+    Local override; error
+    @(44.0000 mm, 61.0000 mm): Zone [GND] on F.Cu, priority 0
+    @(73.5000 mm, 83.7300 mm): PTH pad 2 [GND] of R2
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

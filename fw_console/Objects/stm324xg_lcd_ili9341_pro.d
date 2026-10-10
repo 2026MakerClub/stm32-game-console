@@ -1,0 +1,13 @@
+./objects/stm324xg_lcd_ili9341_pro.o: GLCD\stm324xg_lcd_ILI9341_Pro.c \
+  GLCD\stm324xg_lcd_sklin.h \
+  C:\Keil_v5\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h \
+  C:\Keil_v5\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm4.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
+  C:\Keil_v5\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h \
+  C:\Keil_v5\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_compiler.h \
+  C:\Keil_v5\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armclang.h \
+  C:\Keil_v5\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\mpu_armv7.h \
+  C:\Keil_v5\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h \
+  GLCD\.\Fonts\fonts.h GLCD\stm32f4xx_fsmc.h GLCD\stm32f4xx.h \
+  GLCD\.\Fonts\font12.c GLCD\.\Fonts\fonts.h GLCD\.\Fonts\font16.c \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h
